@@ -1,0 +1,215 @@
+# 프로젝트 개발 가이드라인
+
+## 1. 컴포넌트 가이드라인
+
+### ShadCN Components
+- 모든 UI 컴포년트는 ShadCN을 사용해야 합니다.
+- 컴포넌트 사용 전 설치 여부를 확인해야 합니다: '/components/ui' 디렉토리 체크
+- 컴포넌트 설치 명령어를 사용해야 합니다: 'npx shadcn@latest add [component—name]'
+    - 주의: 'npx shadcn—ui@latest add' 명령어는 deprecated. 반드시 'npx shadcn@latest add'를 사용해야 합니다.
+
+### lcons
+
+- 모든 아이콘은 Lucide React를 사용해야 합니다
+- 아이콘 임포트 방법: 'import { IconName } from "lucide—react"'
+- 예시: 'import { Search, Menu } from "lucide—react"'
+
+### Component Structure
+
+- 컴포넌트는 '/components' 디렉토리 내에 위치해야 합니다
+- UI 컴포넌트는 '/components/ui' 디렉토리에 위치해야 합니다
+- 페이지별 컴포년트는 '/app' 디렉토리 내 해당 라우트에 위치해야 합니다
+
+### Core Practices
+
+- TypeScript types must be strictly defined.
+- Follow the user requirements carefully and precisely.
+- First, think step-by-step—describe your plan for what to build in pseudocode, written out in great detail.
+- Confirm the plan with the user, then write the code!
+- Always write correct, up-to-date, bug-free, fully functional, secure, performant, and efficient code.
+- Focus on readability over performance.
+- Fully implement all requested functionality.
+- Leave NO to-dos, placeholders, or missing pieces in the code.
+- Ensure the code is complete! Thoroughly verify the final version.
+- Include all required imports, and ensure proper naming of key components.
+- Be concise. Minimize unnecessary explanations and redundancy.
+- If you believe there might not be a correct answer, say so. If you do not know the answer, admit it instead of guessing.
+- Always provide concise, precise answers.
+- Ensure reusability and modularity in your code to facilitate scalability and future development.
+- Components must be designed to be reusable.
+- Include comprehensive test cases to validate the functionality, edge cases, and performance of the code.
+- Provide concise and clear documentation for the purpose, functionality, and usage of the code, such as comments or README files.
+- Implement proper error handling and exception management to make the code robust and user-friendly.
+- Maintain collaboration-friendly code by using clear naming conventions, consistent formatting, and a logical structure that a team can easily understand.
+- Please answer in Korean.
+
+## 2. 프로젝트 구조
+
+### Git 관리
+- 브랜치 전략
+  - main: 프로덕션 브랜치
+  - develop: 개발 브랜치
+  - feature/*: 기능 개발 브랜치
+  - hotfix/*: 긴급 수정 브랜치
+- 커밋 메시지 컨벤션
+  - feat: 새로운 기능 추가
+  - fix: 버그 수정
+  - docs: 문서 수정
+  - style: 코드 포맷팅
+  - refactor: 코드 리팩토링
+  - test: 테스트 코드
+  - chore: 빌드 업무 수정
+
+### 폴더 구조
+```
+/
+├── app/                # 페이지 및 라우트
+├── components/         # 재사용 가능한 컴포넌트
+│   ├── ui/            # ShadCN UI 컴포넌트
+│   └── common/        # 공통 컴포넌트
+├── lib/               # 유틸리티 함수
+├── hooks/             # 커스텀 훅
+├── types/             # TypeScript 타입 정의
+├── styles/            # 전역 스타일
+└── public/            # 정적 파일
+```
+### 환경 변수 관리
+- .env.local: 로컬 개발 환경
+- .env.development: 개발 서버 환경
+- .env.production: 프로덕션 환경
+- .env.example: 환경 변수 예시 파일 (깃 저장소에 포함)
+- 환경 변수는 DB 및 메모리 DB 접속 정보 설정을 포함해야 합니다.
+- 환경 변수는 로그 정보 및 디버깅 정보 설정을 포함해야 합니다.
+- 환경 변수는 배포 주소 정보 설정을 포함해야 합니다.
+- 환경 변수는 모니터링 주소 정보 설정을 포함해야 합니다.
+
+## 3. 코드 스타일 가이드
+
+### TypeScript
+- 엄격한 타입 정의 필수
+- any 타입 사용 금지
+- 인터페이스 명명: 'I' 접두사 사용 (예: IUser)
+- 타입 명명: 'T' 접두사 사용 (예: TUserResponse)
+
+### ESLint & Prettier
+- ESLint 규칙 준수
+- 들여쓰기: 2칸
+- 세미콜론 필수
+- 작은따옴표 사용
+- 후행 쉼표 사용
+
+### 네이밍 컨벤션
+- 컴포넌트: PascalCase
+- 함수: PascalCase
+- 변수: PascalCase
+- 상수: UPPER_SNAKE_CASE
+- DB 테이블 및 컬럼 의 명칭: snake_case
+- 파일명: kebab-case
+
+## 4. 상태 관리
+
+### 전역 상태
+- Zustand 사용
+- 상태 저장소는 기능별로 분리
+- 상태 업데이트는 불변성 유지
+
+### API 통신
+- React Query 사용
+- API 엔드포인트는 상수로 관리
+- 에러 핸들링 필수
+- 로딩 상태 처리 필수
+
+
+## 5. 성능 최적화
+
+### 이미지 최적화
+- Next.js Image 컴포넌트 사용
+- WebP 포맷 사용
+- 적절한 이미지 사이즈 설정
+
+### 번들 최적화
+- 동적 임포트 활용
+- 번들 분석기 사용
+- 불필요한 의존성 제거
+
+## 6. 테스트
+
+### Validation
+- 모든 입력 필드는 유효성 검사 필수
+- 유효성 검사 오류 메시지 제공
+- joi 사용
+
+
+### 단위 테스트
+- Jest + React Testing Library 사용
+- 컴포넌트당 최소 1개 이상의 테스트
+- 핵심 비즈니스 로직 테스트 필수
+
+### E2E 테스트
+- Cypress 사용
+- 주요 사용자 시나리오 테스트
+
+## 7. 문서화
+
+### 코드 문서화
+- 모든 문서는 제작 및 수정과 동시에 업데이트 및 유지 보수
+- 복잡한 로직에 대한 설명 필수
+- 코드 전반의 주석은 JSDoc 스타일 주석 사용
+- 코드 외 문서에서는 Markdown 형식 사용
+- 도면 및 그래프는 Mermaid 형식 사용
+
+- 프로젝트의 Setup 및 실행 방법과 주요 개요는 README.md 에 저장
+- 프로젝트의 제작 개요 및 컨텐츠에 대한 설명, 핵심 기능에 대한 설명은 문서는 Doc/Doc.md 에 저장
+- 디렉토리 구조는 Doc/Dir.md 에 저장
+- 주요 Function 및 메서드 문서는 Doc/CoreFunction.md 에 저장
+- DataClass의 정보는 Doc/Data/DataClass.md
+- DataStructure의 정보는 Doc/Data/DataStructure.md
+- Enum의 정보는 Doc/Data/Enum.md
+- 글로벌 상수의 정보는 Doc/Data/GlobalConstant.md
+- Json Data 정보는 Doc/Data/Json.md
+- Xml Data 정보는 Doc/Data/Xml.md
+- CSV Data 정보는 Doc/Data/Csv.md
+- IDL 정보는 Doc/Data/Idl.md
+- 타입 정의는 Doc/Data/Type.md
+- DB 접속 정보는 Doc/Data/ServiceInfo.md
+- DB 스키마 정보는 Doc/Data/DB.md
+    - 테이블의 컬럼 정보
+    - 테이블의 인덱스 정보
+    - 테이블의 키 정보
+    - 테이블의 관계 정보
+        - Mermaid 형식 사용
+    - 테이블의 제약 조건 정보
+    - 테이블의 프로시저 정보
+    - 테이블의 함수 정보
+    - 테이블의 이벤트 정보
+    - 테이블의 파티션 정보
+
+### API 문서화
+- Swagger/OpenAPI 사용
+- API 스펙 변경 시 즉시 업데이트
+
+## 8. 보안
+
+### 인증/인가
+- JWT 토큰 관리
+- 민감한 정보는 .env 파일에서 관리
+- XSS, CSRF 방어
+
+## 9. 접근성
+
+### 웹 접근성
+- WCAG 2.1 가이드라인 준수
+- aria-* 속성 적절히 사용
+- 키보드 네비게이션 지원
+
+## 10. 배포
+
+### CI/CD
+- GitHub Actions 사용
+- 자동화된 테스트 실행
+- 자동 배포 파이프라인 구축
+
+### 모니터링
+- Sentry를 통한 에러 추적
+- 성능 메트릭스 모니터링
+- 정기적인 성능 리포트 검토
