@@ -14,9 +14,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuthStore } from '@/lib/store/auth-store';
+import { useAuthStore, type AuthStore } from '@/lib/store/auth-store';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { useEffect, useState } from 'react';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -27,12 +28,18 @@ const formSchema = z.object({
   }),
 });
 
+type LoginFormValues = z.infer<typeof formSchema>;
+
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const login = useAuthStore((state) => state.login);
+  const [mounted, setMounted] = useState(false);
+  
+  const isLoading = useAuthStore((state: AuthStore) => state.isLoading);
+  const isAuthenticated = useAuthStore((state: AuthStore) => state.isAuthenticated);
+  const login = useAuthStore((state: AuthStore) => state.login);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<LoginFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
@@ -40,22 +47,40 @@ export default function LoginPage() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const success = await login(values.email, values.password);
-    
-    if (success) {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [mounted, isAuthenticated, router]);
+
+  async function onSubmit(values: LoginFormValues) {
+    if (isLoading) return;
+
+    try {
+      await login(values.email, values.password);
       toast({
         title: '로그인 성공',
         description: '관리자 페이지로 이동합니다.',
       });
-      router.push('/dashboard');
-    } else {
+    } catch (error: unknown) {
+      console.error('Login failed:', error);
+      
       toast({
         variant: 'destructive',
         title: '로그인 실패',
-        description: '이메일 또는 비밀번호를 확인해주세요.',
+        description: error instanceof Error 
+          ? error.message 
+          : '이메일 또는 비밀번호를 확인해주세요.',
       });
     }
+  }
+
+  if (!mounted) {
+    return null;
   }
 
   return (
@@ -74,7 +99,12 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>이메일</FormLabel>
                     <FormControl>
-                      <Input placeholder="이메일을 입력하세요" {...field} />
+                      <Input 
+                        placeholder="이메일을 입력하세요" 
+                        {...field} 
+                        disabled={isLoading}
+                        autoComplete="email"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -91,14 +121,16 @@ export default function LoginPage() {
                         type="password"
                         placeholder="비밀번호를 입력하세요"
                         {...field}
+                        disabled={isLoading}
+                        autoComplete="current-password"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                로그인
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? '로그인 중...' : '로그인'}
               </Button>
             </form>
           </Form>
